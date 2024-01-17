@@ -88,17 +88,25 @@ def load_pickle(data_path):
     for cell_sequence_pickle in cell_sequences_pickle:
         if type(cell_sequence_pickle) == type(()):
             try:
-                batch_inputs_pickle.append(cell_sequence_pickle[0].tolist())
+                a = cell_sequence_pickle[0].tolist()
+                a = [item.tolist() for item in a]
+                batch_inputs_pickle.append(a)
+                print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
             except:
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
+                print(332,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
             try:
                 batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
+                print(44,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
             except:
                 batch_tags_pickle.append(cell_sequence_pickle[3])
+                print(442,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
             try:
                 batch_lengths_pickle.append(cell_sequence_pickle[2].tolist())
+                print(55,type(batch_lengths_pickle[-1]))
             except:
                 batch_lengths_pickle.append(cell_sequence_pickle[2])
+                print(552,type(batch_lengths_pickle[-1]))
             continue
         try:
             batch_inputs_pickle.append(cell_sequence_pickle.cell_embed.tolist())
@@ -112,6 +120,8 @@ def load_pickle(data_path):
             batch_lengths_pickle.append(cell_sequence_pickle.cell_length.tolist())
         except:
             batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
+        print(111,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]),type(batch_inputs_pickle[-1][0][0]))
+        print(222,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
     return batch_inputs_pickle, batch_tags_pickle, batch_lengths_pickle
     
 parser = argparse.ArgumentParser(description="Cell state recognition for columns")

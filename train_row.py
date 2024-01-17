@@ -152,10 +152,12 @@ def load_pickle(data_path):
     batch_inputs_pickle = []
     batch_tags_pickle = []
     batch_lengths_pickle = []
-    for cell_sequence_pickle in cell_sequences_pickle:
+    for vim t in cell_sequences_pickle:
         if type(cell_sequence_pickle) == type(()):
             try:
-                batch_inputs_pickle.append(cell_sequence_pickle[0].tolist())
+                a = cell_sequence_pickle[0].tolist()
+                a = [item.tolist() for item in a]
+                batch_inputs_pickle.append(a)
             except:
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
             try:
