@@ -152,23 +152,23 @@ def load_pickle(data_path):
                 a = cell_sequence_pickle[0].tolist()
                 #a = [item.tolist() for item in a]
                 batch_inputs_pickle.append(a)
-                print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
+                #print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
             except Exception as e:
                 print(e)
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
-                print(332,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
+                #print(332,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
             try:
                 batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
-                print(44,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
+                #print(44,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
             except:
                 batch_tags_pickle.append(cell_sequence_pickle[3])
-                print(442,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
+                #print(442,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
             try:
                 batch_lengths_pickle.append(cell_sequence_pickle[2].tolist())
-                print(55,type(batch_lengths_pickle[-1]))
+                #print(55,type(batch_lengths_pickle[-1]))
             except:
                 batch_lengths_pickle.append(cell_sequence_pickle[2])
-                print(552,type(batch_lengths_pickle[-1]))
+                #print(552,type(batch_lengths_pickle[-1]))
             continue
         try:
             batch_inputs_pickle.append(cell_sequence_pickle.cell_embed.tolist())
@@ -182,8 +182,8 @@ def load_pickle(data_path):
             batch_lengths_pickle.append(cell_sequence_pickle.cell_length.tolist())
         except:
             batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
-        print(111,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]),type(batch_inputs_pickle[-1][0][0]))
-        print(222,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
+        #print(111,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]),type(batch_inputs_pickle[-1][0][0]))
+        #print(222,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
     return batch_inputs_pickle, batch_tags_pickle, batch_lengths_pickle
     
     
@@ -200,8 +200,8 @@ if not os.path.exists(model_path):
 # if not os.path.exists(os.path.join(log_path, args.direction)):
 #     os.mkdir(os.path.join(log_path, args.direction))
 
-train_inputs, train_labels, train_lengths = load_pickle(data_path + args.direction + "_train_" + str(0) + ".pkl")
-batch_inputs = train_inputs[:2]
+#train_inputs, train_labels, train_lengths = load_pickle(data_path + args.direction + "_train_" + str(0) + ".pkl")
+#batch_inputs = train_inputs[:2]
 valid_inputs, valid_labels, valid_lengths = load_pickle(data_path + args.direction + "_valid"+".pkl")
 test_inputs, test_labels, test_lengths = load_pickle(data_path + args.direction + "_test" + ".pkl")
 test_number = len(test_inputs)
