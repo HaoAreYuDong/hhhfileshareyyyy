@@ -154,8 +154,8 @@ def load_pickle(data_path):
     batch_lengths_pickle = []
     for cell_sequence_pickle in cell_sequences_pickle:
         if type(cell_sequence_pickle) == type(()):
-            batch_inputs_pickle.append(cell_sequence_pickle[0])
-            batch_tags_pickle.append(cell_sequence_pickle[3])
+            batch_inputs_pickle.append(cell_sequence_pickle[0].tolist())
+            batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
             batch_lengths_pickle.append(cell_sequence_pickle[2])
             continue
         batch_inputs_pickle.append(cell_sequence_pickle.cell_embed)
