@@ -156,20 +156,28 @@ def load_pickle(data_path):
         if type(cell_sequence_pickle) == type(()):
             try:
                 batch_inputs_pickle.append(cell_sequence_pickle[0].tolist())
-                batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
-                batch_lengths_pickle.append(cell_sequence_pickle[2])
             except:
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
+            try:
+                batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
+            except:
                 batch_tags_pickle.append(cell_sequence_pickle[3])
+            try:
+                batch_lengths_pickle.append(cell_sequence_pickle[2].tolist())
+            except:
                 batch_lengths_pickle.append(cell_sequence_pickle[2])
             continue
         try:
             batch_inputs_pickle.append(cell_sequence_pickle.cell_embed.tolist())
-            batch_tags_pickle.append(cell_sequence_pickle.label_id.tolist())
-            batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
         except:
             batch_inputs_pickle.append(cell_sequence_pickle.cell_embed)
+        try:
+            batch_tags_pickle.append(cell_sequence_pickle.label_id.tolist())
+        except:
             batch_tags_pickle.append(cell_sequence_pickle.label_id)
+        try:
+            batch_lengths_pickle.append(cell_sequence_pickle.cell_length.tolist())
+        except:
             batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
     return batch_inputs_pickle, batch_tags_pickle, batch_lengths_pickle
 
