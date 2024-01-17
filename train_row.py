@@ -154,13 +154,23 @@ def load_pickle(data_path):
     batch_lengths_pickle = []
     for cell_sequence_pickle in cell_sequences_pickle:
         if type(cell_sequence_pickle) == type(()):
-            batch_inputs_pickle.append(cell_sequence_pickle[0].tolist())
-            batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
-            batch_lengths_pickle.append(cell_sequence_pickle[2])
+            try:
+                batch_inputs_pickle.append(cell_sequence_pickle[0].tolist())
+                batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
+                batch_lengths_pickle.append(cell_sequence_pickle[2])
+            except:
+                batch_inputs_pickle.append(cell_sequence_pickle[0])
+                batch_tags_pickle.append(cell_sequence_pickle[3])
+                batch_lengths_pickle.append(cell_sequence_pickle[2])
             continue
-        batch_inputs_pickle.append(cell_sequence_pickle.cell_embed)
-        batch_tags_pickle.append(cell_sequence_pickle.label_id)
-        batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
+        try:
+            batch_inputs_pickle.append(cell_sequence_pickle.cell_embed.tolist())
+            batch_tags_pickle.append(cell_sequence_pickle.label_id.tolist())
+            batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
+        except:
+            batch_inputs_pickle.append(cell_sequence_pickle.cell_embed)
+            batch_tags_pickle.append(cell_sequence_pickle.label_id)
+            batch_lengths_pickle.append(cell_sequence_pickle.cell_length)
     return batch_inputs_pickle, batch_tags_pickle, batch_lengths_pickle
 
 valid_inputs, valid_labels, valid_lengths = load_pickle(data_path + args.direction + "_valid" + ".pkl")
