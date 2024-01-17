@@ -25,6 +25,67 @@ python main9.py --exp_id="101" --gpu_id="1" --direction="col" --use_cnn=True --u
 """
 
 
+
+    
+parser = argparse.ArgumentParser(description="Cell state recognition for columns")
+
+parser.add_argument("--exp_id", type=str, default="0", help="experiment id start from 1")
+parser.add_argument("--gpu_id", type=str, default="0", help="avaliable gpu id: -1, 0, 1, 2, 3 (-1 for cpu)")
+parser.add_argument("--steps_check", type=int, default=1000, help="steps to check loss and acc")
+parser.add_argument("--epoch", type=int, default=3, help="maximum epoch number")
+parser.add_argument("--batch_size", type=int, default=128, help="batch size")
+parser.add_argument("--direction", default="col", help="sequence direction")
+parser.add_argument("--num_steps", type=int, default=100, help="sequence length")
+parser.add_argument("--embedding_size", type=int, default=209, help="embedding size")
+
+parser.add_argument("--architecture", type=str, default="cnn_rnn_cnn", help="nn architecture: cnn_rnn1, cnn_rnn2, rnn_cnn, cnn_rnn_cnn, cnn+rnn")
+
+parser.add_argument("--input_hidden_size", type=int, default=50, help="input hidden size")
+
+parser.add_argument("--use_cnn", type=bool, default=True, help="use cnn or not")
+parser.add_argument("--cnn_name", type=str, default="cnn_1d", help="avaliable cnn models: cnn_1d, cnn_2d")
+parser.add_argument("--stacked_cnn_layers", type=int, default=3, help="num of stacked cnn layers")
+parser.add_argument("--filters", type=str, default="128|96|64", help="num of filters: |")
+parser.add_argument("--kernel_size", type=str, default="3", help="kernel size: |")
+parser.add_argument("--strides_conv", type=str, default="1", help="strides of convolutional layer: |")
+parser.add_argument("--padding_conv", type=str, default="same", help="avaliable padding types for convolutional layer: same, valid")
+parser.add_argument("--dilation_rate", type=str, default="1", help="dilation rate: |")
+parser.add_argument("--pooling_name", type=str, default="max_pooling", help="avaliable poolings: max_pooling, avg_pooling")
+parser.add_argument("--strides_pool", type=int, default=1, help="strides of pooling layer: 1, 2")
+parser.add_argument("--padding_pool", type=str, default="valid", help="avaliable padding types for pooling layer: same, valid")
+parser.add_argument("--pool_size", type=int, default=2, help="pooling size")
+
+parser.add_argument("--use_rnn", type=bool, default=True, help="use rnn or not")
+parser.add_argument("--rnn_name", type=str, default="lstm", help="avaliable rnn models: rnn, lstm, gru")
+parser.add_argument("--lstm_dim", type=int, default=100, help="lstm dim")
+
+parser.add_argument("--output_hidden_size", type=int, default=100, help="output hidden size")
+parser.add_argument("--use_attention", type=bool, default=False, help="use attention or not")
+parser.add_argument("--attention_size", type=int, default=100, help="attention size")
+parser.add_argument("--num_tags", type=int, default=4, help="num tags")
+
+parser.add_argument("--regularization", type=float, default=0.0, help="regularization")
+parser.add_argument("--dropout_name", type=str, default="dropout", help="avaliable dropout methods: dropout, alpha_dropout, spatial_dropout_1d, gaussian_dropout")
+parser.add_argument("--dropout_rate", type=str, default="0.55", help="keep probability rate = 1 - dropout rate: |")
+parser.add_argument("--initializer_name", type=str, default="he_normal", help="avaliable initializers: xavier, he_normal, he_uniform, lecun_uniform, lecun_normal")
+parser.add_argument("--activation_name", type=str, default="leaky_relu", help="avaliable activations function: sigmoid, tanh, relu, leaky_relu, elu, selu, crelu, relu6, softplus, softsign")
+parser.add_argument("--optimizer_name", type=str, default="adam", help="avaliable optimizers: sgd, momentum, adagrad, adam, rmsprop, adadelta, adam, adagradda, adagradda, prox_adagrad, prox_sgd")
+parser.add_argument("--clip", type=int, default=5, help="gradient clip")
+parser.add_argument("--momentum", type=float, default=0.9, help="momentum")
+parser.add_argument("--lr_init", type=float, default=0.0002, help="initial learning rate")
+parser.add_argument("--lr_decay", type=str, default="exponential_decay", help="avaliable learning rate decay modes: none, polynomial_decay, exponential_decay, natural_exp_decay, cosine_decay, cosine_decay_restarts, linear_cosine_decay, noisy_linear_cosine_decay, inverse_time_decay")
+parser.add_argument("--lr_decay_steps", type=int, default=10240, help="learning rate decay steps")
+parser.add_argument("--lr_first_decay_steps", type=int, default=10240, help="learning rate first decay steps")
+parser.add_argument("--lr_decay_rate", type=float, default=0.999999, help="learning rate decay rate")
+parser.add_argument("--lr_staircase", type=bool, default=False, help="learning rate stair case mode")
+
+args = parser.parse_args()
+# args = parser.parse_args(args=[])
+print(args)
+
+os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
+
+
 class CellSequenceData(object):
     """row/col sequence
     """
@@ -91,7 +152,7 @@ def load_pickle(data_path):
                 a = cell_sequence_pickle[0].tolist()
                 a = [item.tolist() for item in a]
                 batch_inputs_pickle.append(a)
-                print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
+                print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]), type(batch_inputs_pickle[-1][0][0][0]))
             except:
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
                 print(332,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
@@ -124,65 +185,7 @@ def load_pickle(data_path):
         print(222,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
     return batch_inputs_pickle, batch_tags_pickle, batch_lengths_pickle
     
-parser = argparse.ArgumentParser(description="Cell state recognition for columns")
-
-parser.add_argument("--exp_id", type=str, default="0", help="experiment id start from 1")
-parser.add_argument("--gpu_id", type=str, default="0", help="avaliable gpu id: -1, 0, 1, 2, 3 (-1 for cpu)")
-parser.add_argument("--steps_check", type=int, default=1000, help="steps to check loss and acc")
-parser.add_argument("--epoch", type=int, default=3, help="maximum epoch number")
-parser.add_argument("--batch_size", type=int, default=128, help="batch size")
-parser.add_argument("--direction", default="col", help="sequence direction")
-parser.add_argument("--num_steps", type=int, default=100, help="sequence length")
-parser.add_argument("--embedding_size", type=int, default=209, help="embedding size")
-
-parser.add_argument("--architecture", type=str, default="cnn_rnn_cnn", help="nn architecture: cnn_rnn1, cnn_rnn2, rnn_cnn, cnn_rnn_cnn, cnn+rnn")
-
-parser.add_argument("--input_hidden_size", type=int, default=50, help="input hidden size")
-
-parser.add_argument("--use_cnn", type=bool, default=True, help="use cnn or not")
-parser.add_argument("--cnn_name", type=str, default="cnn_1d", help="avaliable cnn models: cnn_1d, cnn_2d")
-parser.add_argument("--stacked_cnn_layers", type=int, default=3, help="num of stacked cnn layers")
-parser.add_argument("--filters", type=str, default="128|96|64", help="num of filters: |")
-parser.add_argument("--kernel_size", type=str, default="3", help="kernel size: |")
-parser.add_argument("--strides_conv", type=str, default="1", help="strides of convolutional layer: |")
-parser.add_argument("--padding_conv", type=str, default="same", help="avaliable padding types for convolutional layer: same, valid")
-parser.add_argument("--dilation_rate", type=str, default="1", help="dilation rate: |")
-parser.add_argument("--pooling_name", type=str, default="max_pooling", help="avaliable poolings: max_pooling, avg_pooling")
-parser.add_argument("--strides_pool", type=int, default=1, help="strides of pooling layer: 1, 2")
-parser.add_argument("--padding_pool", type=str, default="valid", help="avaliable padding types for pooling layer: same, valid")
-parser.add_argument("--pool_size", type=int, default=2, help="pooling size")
-
-parser.add_argument("--use_rnn", type=bool, default=True, help="use rnn or not")
-parser.add_argument("--rnn_name", type=str, default="lstm", help="avaliable rnn models: rnn, lstm, gru")
-parser.add_argument("--lstm_dim", type=int, default=100, help="lstm dim")
-
-parser.add_argument("--output_hidden_size", type=int, default=100, help="output hidden size")
-parser.add_argument("--use_attention", type=bool, default=False, help="use attention or not")
-parser.add_argument("--attention_size", type=int, default=100, help="attention size")
-parser.add_argument("--num_tags", type=int, default=4, help="num tags")
-
-parser.add_argument("--regularization", type=float, default=0.0, help="regularization")
-parser.add_argument("--dropout_name", type=str, default="dropout", help="avaliable dropout methods: dropout, alpha_dropout, spatial_dropout_1d, gaussian_dropout")
-parser.add_argument("--dropout_rate", type=str, default="0.55", help="keep probability rate = 1 - dropout rate: |")
-parser.add_argument("--initializer_name", type=str, default="he_normal", help="avaliable initializers: xavier, he_normal, he_uniform, lecun_uniform, lecun_normal")
-parser.add_argument("--activation_name", type=str, default="leaky_relu", help="avaliable activations function: sigmoid, tanh, relu, leaky_relu, elu, selu, crelu, relu6, softplus, softsign")
-parser.add_argument("--optimizer_name", type=str, default="adam", help="avaliable optimizers: sgd, momentum, adagrad, adam, rmsprop, adadelta, adam, adagradda, adagradda, prox_adagrad, prox_sgd")
-parser.add_argument("--clip", type=int, default=5, help="gradient clip")
-parser.add_argument("--momentum", type=float, default=0.9, help="momentum")
-parser.add_argument("--lr_init", type=float, default=0.0002, help="initial learning rate")
-parser.add_argument("--lr_decay", type=str, default="exponential_decay", help="avaliable learning rate decay modes: none, polynomial_decay, exponential_decay, natural_exp_decay, cosine_decay, cosine_decay_restarts, linear_cosine_decay, noisy_linear_cosine_decay, inverse_time_decay")
-parser.add_argument("--lr_decay_steps", type=int, default=10240, help="learning rate decay steps")
-parser.add_argument("--lr_first_decay_steps", type=int, default=10240, help="learning rate first decay steps")
-parser.add_argument("--lr_decay_rate", type=float, default=0.999999, help="learning rate decay rate")
-parser.add_argument("--lr_staircase", type=bool, default=False, help="learning rate stair case mode")
-
-args = parser.parse_args()
-# args = parser.parse_args(args=[])
-print(args)
-
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
-
-
+    
 root_path = os.getcwd()
 data_path = "./column/data_column/"
 if not os.path.exists(os.path.join(root_path, "col_model/")):
