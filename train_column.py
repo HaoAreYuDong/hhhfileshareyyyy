@@ -152,7 +152,7 @@ def load_pickle(data_path):
                 a = cell_sequence_pickle[0].tolist()
                 #a = [item.tolist() for item in a]
                 batch_inputs_pickle.append(a)
-                print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]), type(batch_inputs_pickle[-1][0][0][0]))
+                print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
             except Exception as e:
                 print(e)
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
