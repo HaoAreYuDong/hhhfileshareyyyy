@@ -150,10 +150,11 @@ def load_pickle(data_path):
         if type(cell_sequence_pickle) == type(()):
             try:
                 a = cell_sequence_pickle[0].tolist()
-                a = [item.tolist() for item in a]
+                #a = [item.tolist() for item in a]
                 batch_inputs_pickle.append(a)
                 print(33,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]), type(batch_inputs_pickle[-1][0][0][0]))
-            except:
+            except Exception as e:
+                print(e)
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
                 print(332,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
             try:
@@ -199,7 +200,8 @@ if not os.path.exists(model_path):
 # if not os.path.exists(os.path.join(log_path, args.direction)):
 #     os.mkdir(os.path.join(log_path, args.direction))
 
-
+train_inputs, train_labels, train_lengths = load_pickle(data_path + args.direction + "_train_" + str(0) + ".pkl")
+batch_inputs = train_inputs[:2]
 valid_inputs, valid_labels, valid_lengths = load_pickle(data_path + args.direction + "_valid"+".pkl")
 test_inputs, test_labels, test_lengths = load_pickle(data_path + args.direction + "_test" + ".pkl")
 test_number = len(test_inputs)
