@@ -157,12 +157,14 @@ def load_pickle(data_path):
                 print(e)
                 batch_inputs_pickle.append(cell_sequence_pickle[0])
                 #print(332,type(batch_inputs_pickle[-1]),type(batch_inputs_pickle[-1][0]), type(batch_inputs_pickle[-1][0][0]))
+                #xxx
             try:
                 batch_tags_pickle.append(cell_sequence_pickle[3].tolist())
                 #print(44,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
             except:
                 batch_tags_pickle.append(cell_sequence_pickle[3])
                 #print(442,type(batch_tags_pickle[-1]),type(batch_tags_pickle[-1][0]))
+                #xxx
             try:
                 batch_lengths_pickle.append(cell_sequence_pickle[2].tolist())
                 #print(55,type(batch_lengths_pickle[-1]))
@@ -200,8 +202,8 @@ if not os.path.exists(model_path):
 # if not os.path.exists(os.path.join(log_path, args.direction)):
 #     os.mkdir(os.path.join(log_path, args.direction))
 
-#train_inputs, train_labels, train_lengths = load_pickle(data_path + args.direction + "_train_" + str(0) + ".pkl")
-#batch_inputs = train_inputs[:2]
+train_inputs, train_labels, train_lengths = load_pickle(data_path + args.direction + "_train_" + str(0) + ".pkl")
+batch_inputs = train_inputs[:2]
 valid_inputs, valid_labels, valid_lengths = load_pickle(data_path + args.direction + "_valid"+".pkl")
 test_inputs, test_labels, test_lengths = load_pickle(data_path + args.direction + "_test" + ".pkl")
 test_number = len(test_inputs)
@@ -371,7 +373,9 @@ def train(args):
             print("=" * 25 + "EPOCH " + str(epoch) + "=" * 25 + "\n")
             for file_id in range(n_file):
                 train_inputs, train_labels, train_lengths = load_pickle(data_path + args.direction + "_train_" + str(file_id) + ".pkl")
+                
                 for batch_id in range(math.ceil(len(train_inputs) / args.batch_size)):
+                    print(batch_id)
                     batch_inputs = train_inputs[batch_id * args.batch_size : (batch_id + 1) * args.batch_size]
                     batch_lengths = train_lengths[batch_id * args.batch_size : (batch_id + 1) * args.batch_size]
                     batch_tags = train_labels[batch_id * args.batch_size : (batch_id + 1) * args.batch_size]
